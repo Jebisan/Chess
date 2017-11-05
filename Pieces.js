@@ -255,6 +255,29 @@ class Queen {
     constructor(Position, Team){
         this.team = Team;
         this.position = Position;
+        addToMap(this, Position);
+    }
+    possiblemoves(){
+        var dict = {;
+        var xPos = this.position.getX();
+        var yPos = this.position.getY();
+        // Right
+        movesLeftRight(dict, this, true);
+        // Left
+        movesLeftRight(dict,this, false);
+        // Up
+        movesUpDown(dict, this, 1);
+        // Down
+        movesUpDown(dict, this, -1);
+        //right up
+        crossmoves(dict, this, 1, true);
+        //left up
+        crossmoves(dict, this, 1, false);
+        //right down
+        crossmoves(dict, this, -1, true);
+        //left down
+        crossmoves(dict, this, -1, false);
+    }
     }
 }
 
