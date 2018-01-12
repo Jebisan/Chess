@@ -213,7 +213,10 @@ function sendErrorMessage(client, message) {
 }
 
 function voteMove(id, oldLoc, newLoc) {
-    if (clientAlignment[id] !== currentSide) sendErrorMessage(clients[id], "Not your turn yet");
+    if (clientAlignment[id] !== currentSide) {
+        sendErrorMessage(clients[id], "Not your turn yet");
+        return
+    }
 
     if(board.get(oldLoc).color === clientAlignment[id]) {
         if (board.move(oldLoc+"-"+newLoc,{sloppy: true}) !== null) {
@@ -224,7 +227,11 @@ function voteMove(id, oldLoc, newLoc) {
             sendErrorMessage(clients[id], "Invalid move");
         }
     } else {
-        sendErrorMessage(clients[id], "You can only move " + clientAlignment[id] + " pieces");
+        var color = "white";
+        if(clientAlignment[id] === "b") {
+            color = "black";
+        }
+        sendErrorMessage(clients[id], "You can only move " + color + " pieces");
     }
 }
 
