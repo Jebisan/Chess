@@ -169,7 +169,7 @@ function countdownTimer() {
 
 
 function sendBoard(client) {
-    client.sendUTF(JSON.stringify({action: "newBoard", board: JSON.stringify(board.getBoard())}));
+    client.sendUTF(JSON.stringify({action: "newBoard", board: JSON.stringify(board.board())}));
 }
 
 function broadcastTimeLeft() {
@@ -215,7 +215,7 @@ function sendErrorMessage(client, message) {
 function voteMove(id, oldLoc, newLoc) {
     if (clientAlignment[id] !== currentSide) sendErrorMessage(clients[id], "Not your turn yet");
 
-    if(board.get(oldLoc) === clientAlignment[id]) {
+    if(board.get(oldLoc).color === clientAlignment[id]) {
         if (board.move(oldLoc+"-"+newLoc,{sloppy: true}) !== null) {
             board.undo();
             clientVotes[id] = oldLoc + "-" + newLoc;
