@@ -5,8 +5,14 @@
     <title>Democratic chess</title>
 
     <link rel="stylesheet" href="css/chessboard-0.3.0.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
 </head>
 <body>
+<div class="container">
+<div id="alert_placeholder"></div>
 <table width="100%">
     <tr>
         <th><h1>Board</h1> <div id="color"></div></th>
@@ -32,6 +38,7 @@
         </th>
     </tr>
 </table>
+</div>
 
 </body>
 
@@ -39,4 +46,5 @@
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/json3.js"></script>
 <script src="js/servercomms.js"></script>
+
 </html>

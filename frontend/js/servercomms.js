@@ -38,6 +38,15 @@ function isValidMessage(data) {
     return true;
 }
 
+function showalert(message, alerttype="alert-warning") {
+    $('#alert_placeholder').append('<div id="alertdiv" class="alert ' +  alerttype + '"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
+    setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
+        $("#alertdiv").remove();
+    }, 5000);
+}
+
+
+
 function handleServerMessage(event) {
     var message = JSON.parse(event.data);
 
@@ -49,7 +58,7 @@ function handleServerMessage(event) {
     } else if (message.action === "timeLeft") {
         updateTimer(message.time);
     } else if (message.action === "error") {
-        alert(message.message);
+        showalert(message.message, "alert-warning");
     } else if (message.action === "currentSide") {
         document.getElementById("currentSide").innerHTML = message.currentSide;
     } else if (message.action === "movesList") {
