@@ -169,7 +169,7 @@ function countdownTimer() {
 
 
 function sendBoard(client) {
-    client.sendUTF(JSON.stringify({action: "newBoard", board: JSON.stringify(board.board())}));
+    client.sendUTF(JSON.stringify({action: "newBoard", board: JSON.stringify(board.fen())}));
 }
 
 function broadcastTimeLeft() {

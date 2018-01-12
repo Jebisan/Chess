@@ -42,7 +42,7 @@ function handleServerMessage(event) {
     var message = JSON.parse(event.data);
 
     if (message.action === "move") {
-        board.move(message.oldLocation + "-" + message.newLocation);
+        requestBoard(); // To enable castling, en peasent and promotion
     } else if (message.action === "newBoard") {
         console.log(JSON.parse(message.board))
         board.position(JSON.parse(message.board));
