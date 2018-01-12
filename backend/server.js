@@ -107,7 +107,7 @@ function performMove() {
     clientVotes = {};
     broadcastVotes();
     if(board.game_over()) {
-        board.resetBoard();
+        board.reset();
         broadcastBoard();
     }
     return true;
