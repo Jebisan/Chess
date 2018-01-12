@@ -2,17 +2,17 @@ http = require('http');
 
 var WebSocketServer = require('websocket').server;
 var clients = [];
-var board = require('./Pieces');
+var Chess = require('./chess').Chess;
 var DEBUG = true;
 var TIME_PER_TURNS = 10;
 var timeLeft = 0;
-var currentSide = "white";
+var currentSide = "w";
 var clientAlignment = {};
 var blackCount = 0;
 var whiteCount = 0;
 var clientVotes = {};
 
-board.initialiseBoard();
+var board = new Chess();
 
 var server = http.createServer(function (request, response) {
 });
@@ -37,10 +37,10 @@ wsServer.on('request', function (request) {
     connection.sendUTF(JSON.stringify("Welcome to the gameserver"));
 
     if (whiteCount > blackCount) {
-        clientAlignment[id] = "black";
+        clientAlignment[id] = "b";
         blackCount++;
     } else {
-        clientAlignment[id] = "white";
+        clientAlignment[id] = "w";
         whiteCount++;
     }
 
@@ -52,7 +52,7 @@ wsServer.on('request', function (request) {
 
     connection.on('close', function (reasonCode, description) {
         delete clients[id];
-        if (clientAlignment[id] === "black") {
+        if (clientAlignment[id] === "b") {
             blackCount--;
         } else {
             whiteCount--;
@@ -84,10 +84,10 @@ function broadcastCurrentSide() {
 }
 
 function swapSide() {
-    if (currentSide === "white") {
-        currentSide = "black";
+    if (currentSide === "w") {
+        currentSide = "b";
     } else {
-        currentSide = "white";
+        currentSide = "w";
     }
     broadcastCurrentSide();
 }
@@ -102,11 +102,11 @@ function performMove() {
     var moves = sumVotes();
     if(moves.length === 0) return false;
     var move = moves[0].key;
-    board.movePieceByCoord(move.split("-")[0], move.split("-")[1]);
+    board.move(move.split("-")[0]+"-"+move.split("-")[1], {sloppy:true});
     broadcastMove(move.split("-")[0], move.split("-")[1]);
     clientVotes = {};
     broadcastVotes();
-    if(board.gameOver().isGameOver) {
+    if(board.game_over()) {
         board.resetBoard();
         broadcastBoard();
     }
@@ -215,8 +215,9 @@ function sendErrorMessage(client, message) {
 function voteMove(id, oldLoc, newLoc) {
     if (clientAlignment[id] !== currentSide) sendErrorMessage(clients[id], "Not your turn yet");
 
-    if(board.getColor(oldLoc+"-"+newLoc) === clientAlignment[id]) {
-        if (board.isValidMove(oldLoc, newLoc)) {
+    if(board.get(oldLoc) === clientAlignment[id]) {
+        if (board.move(oldLoc+"-"+newLoc,{sloppy: true}) !== null) {
+            board.undo();
             clientVotes[id] = oldLoc + "-" + newLoc;
             broadcastVotes();
         } else {
